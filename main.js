@@ -97,27 +97,47 @@
 
   /* -------------------------------------------------------
      SERVICES — STICKY HORIZONTAL SCROLL
-     250vh section, vertical scroll drives horizontal card movement
+     Vertical scroll drives horizontal card movement.
+     Fixed calculation: maxTranslate = scrollWidth - trackWrap clientWidth
   ------------------------------------------------------- */
   var servicesSection = document.querySelector('.services-section');
   var servicesTrack = document.querySelector('.services-track');
+  var servicesTrackWrap = document.querySelector('.services-track-wrap');
   var progressBar = document.querySelector('.services-progress-bar');
 
   function initServicesScroll() {
-    if (!servicesSection || !servicesTrack) return;
+    if (!servicesSection || !servicesTrack || !servicesTrackWrap) return;
+
+    if (prefersReduced) {
+      // No animation — let cards stack or show naturally
+      servicesSection.style.height = 'auto';
+      var stickyOuter = servicesSection.querySelector('.services-sticky-outer');
+      if (stickyOuter) {
+        stickyOuter.style.position = 'relative';
+        stickyOuter.style.height = 'auto';
+        stickyOuter.style.overflow = 'auto';
+      }
+      return;
+    }
+
+    // Disable native horizontal scroll since we drive it via vertical scroll
+    servicesTrack.style.transform = 'translateX(0)';
 
     function onScroll() {
-      var sectionTop = servicesSection.getBoundingClientRect().top + window.scrollY;
+      // Get section bounds relative to document
+      var rect = servicesSection.getBoundingClientRect();
+      var sectionTop = rect.top + window.scrollY;
       var sectionH = servicesSection.offsetHeight;
       var viewH = window.innerHeight;
 
-      // Scrollable distance within the sticky phase
+      // Sticky phase: from when section hits top to when section bottom hits viewport bottom
       var scrollStart = sectionTop;
       var scrollEnd = sectionTop + sectionH - viewH;
-      var scrolled = window.scrollY - scrollStart;
       var scrollRange = scrollEnd - scrollStart;
 
-      if (scrolled < 0 || scrollRange <= 0) {
+      var scrolled = window.scrollY - scrollStart;
+
+      if (scrollRange <= 0) {
         servicesTrack.style.transform = 'translateX(0)';
         if (progressBar) progressBar.style.width = '0%';
         return;
@@ -125,10 +145,10 @@
 
       var progress = Math.min(Math.max(scrolled / scrollRange, 0), 1);
 
-      // How far to translate: track width minus visible viewport width
+      // How far we need to slide: total track scrollWidth minus visible wrap width
       var trackW = servicesTrack.scrollWidth;
-      var containerW = servicesSection.offsetWidth;
-      var maxTranslate = Math.max(trackW - containerW + 80, 0); // 80px for left padding
+      var wrapW = servicesTrackWrap.clientWidth;
+      var maxTranslate = Math.max(trackW - wrapW, 0);
 
       var tx = progress * maxTranslate;
       servicesTrack.style.transform = 'translateX(-' + tx + 'px)';
@@ -136,19 +156,12 @@
       if (progressBar) progressBar.style.width = (progress * 100) + '%';
     }
 
-    if (!prefersReduced) {
-      window.addEventListener('scroll', onScroll, { passive: true });
-      onScroll();
-    } else {
-      // Show all cards normally, no sticky scroll
-      servicesSection.style.height = 'auto';
-      var stickyOuter = servicesSection.querySelector('.services-sticky-outer');
-      if (stickyOuter) { stickyOuter.style.position = 'relative'; stickyOuter.style.height = 'auto'; }
-    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    // Run once after fonts/images settle
+    window.addEventListener('load', onScroll);
+    onScroll();
   }
 
-  // Wait for layout
-  window.addEventListener('load', initServicesScroll);
   initServicesScroll();
 
   /* -------------------------------------------------------
