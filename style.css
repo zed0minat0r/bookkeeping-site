@@ -1879,3 +1879,24 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   .services-header .section-heading { font-size: 2.1rem; }
   .service-card { width: 280px; }
 }
+
+/* ---- Scroll Journey Bar ---- */
+.scroll-journey {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  z-index: 9999;
+  background: rgba(7, 15, 28, 0.3);
+}
+.scroll-journey-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--amber), var(--sky-bright), var(--amber));
+  box-shadow: 0 0 8px var(--amber), 0 0 16px rgba(232, 146, 58, 0.3);
+  transition: width 0.05s linear;
+}
+@media (prefers-reduced-motion: reduce) {
+  .scroll-journey-fill { transition: none; box-shadow: none; }
+}

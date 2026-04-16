@@ -285,3 +285,15 @@
   }
 
 })();
+
+/* ---- Scroll Journey Bar ---- */
+(function() {
+  var bar = document.getElementById('scrollJourney');
+  if (!bar) return;
+  window.addEventListener('scroll', function() {
+    var scrollTop = window.scrollY || document.documentElement.scrollTop;
+    var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    var pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    bar.style.width = Math.min(pct, 100) + '%';
+  }, { passive: true });
+})();
