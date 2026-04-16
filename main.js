@@ -108,6 +108,12 @@
   function initServicesScroll() {
     if (!servicesSection || !servicesTrack || !servicesTrackWrap) return;
 
+    // On mobile (≤768px) use native horizontal scroll — JS scroll disabled
+    if (window.innerWidth <= 768) {
+      servicesTrack.style.transform = 'none';
+      return;
+    }
+
     if (prefersReduced) {
       // No animation — let cards stack or show naturally
       servicesSection.style.height = 'auto';
@@ -168,6 +174,10 @@
 
     // Remeasure on resize (orientation change, font load, etc.)
     window.addEventListener('resize', function () {
+      if (window.innerWidth <= 768) {
+        servicesTrack.style.transform = 'none';
+        return;
+      }
       measureLayout();
       onScroll();
     }, { passive: true });

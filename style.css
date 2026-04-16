@@ -1419,13 +1419,12 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 
   .hero-eyebrow {
     font-size: 10px;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.08em;
     padding: 6px 12px;
     margin-bottom: 20px;
     max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    white-space: normal;
+    text-align: center;
   }
 
   .hero-headline {
@@ -1500,20 +1499,24 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   .why-section { padding: 80px 0; }
   .why-header { text-align: center; }
   .why-grid { grid-template-columns: 1fr; max-width: 440px; margin: 0 auto; }
+  .why-card { text-align: center; }
+  .why-icon { margin-left: auto; margin-right: auto; }
 
-  /* SERVICES — sticky horizontal scroll, big title */
-  .services-section { height: 280vh; }
-  .services-sticky-outer { height: 100vh; overflow: hidden; }
+  /* SERVICES — native scroll on mobile */
+  .services-section { height: auto; }
+  .services-sticky-outer {
+    position: relative;
+    height: auto;
+    overflow: visible;
+  }
   .services-sticky-inner {
-    padding-left: 0;
-    padding-right: 0;
-    padding-top: 0;
+    padding: calc(var(--nav-h) + 40px) 0 40px;
+    height: auto;
   }
   .services-header {
     padding-left: 20px;
     padding-right: 20px;
-    padding-top: calc(var(--nav-h) + 20px);
-    padding-bottom: 16px;
+    padding-bottom: 24px;
     text-align: center;
     max-width: 100%;
   }
@@ -1532,9 +1535,25 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
     text-align: center;
     font-size: 14px;
   }
-  .services-track { padding-left: 20px; padding-right: 20px; }
-  .service-card { width: 310px; padding: 28px 22px; border-radius: 20px; }
-  .services-progress { margin-left: 20px; margin-right: 20px; margin-bottom: 20px; }
+  .services-track-wrap {
+    overflow-x: auto;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 16px;
+  }
+  .services-track {
+    padding-left: 20px;
+    padding-right: 20px;
+    transform: none !important;
+  }
+  .service-card {
+    width: 310px;
+    padding: 28px 22px;
+    border-radius: 20px;
+    scroll-snap-align: start;
+  }
+  .services-progress { display: none; }
 
   /* ABOUT — center on mobile */
   .about-section { padding: 80px 0; }
