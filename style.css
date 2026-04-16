@@ -341,17 +341,11 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
    ========================================================== */
 
 /* Type A — gradient chevron SVG wave (amber-sky-amber) */
-.divider-wave {
-  position: relative;
-  height: 70px;
-  overflow: hidden;
-  display: block;
-  line-height: 0;
-}
-.divider-wave svg {
-  display: block;
-  width: 100%;
-  height: 100%;
+.divider-wave { display: none; }
+.section-divider {
+  height: 3px;
+  background: linear-gradient(90deg, transparent 0%, var(--amber) 20%, var(--sky-bright) 50%, var(--amber) 80%, transparent 100%);
+  opacity: 0.4;
 }
 
 /* Type B — angled clip-path band */
