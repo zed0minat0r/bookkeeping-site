@@ -112,6 +112,7 @@
   var servicesTrack = document.querySelector('.services-track');
   var servicesTrackWrap = document.querySelector('.services-track-wrap');
   var progressBar = document.querySelector('.services-progress-bar');
+  var scrollHint = document.querySelector('.services-scroll-hint');
 
   function initServicesScroll() {
     if (!servicesSection || !servicesTrack || !servicesTrackWrap) return;
@@ -123,11 +124,11 @@
 
     if (prefersReduced) {
       servicesSection.style.height = 'auto';
-      var stickyOuter = servicesSection.querySelector('.services-sticky-outer');
-      if (stickyOuter) {
-        stickyOuter.style.position = 'relative';
-        stickyOuter.style.height = 'auto';
-        stickyOuter.style.overflow = 'auto';
+      var stickyInner = servicesSection.querySelector('.services-sticky-inner');
+      if (stickyInner) {
+        stickyInner.style.position = 'relative';
+        stickyInner.style.height = 'auto';
+        stickyInner.style.overflow = 'visible';
       }
       return;
     }
@@ -165,6 +166,7 @@
       servicesTrack.style.transform = 'translateX(-' + tx + 'px)';
 
       if (progressBar) progressBar.style.width = (progress * 100) + '%';
+      if (scrollHint) scrollHint.style.opacity = progress > 0.04 ? '0' : '';
     }
 
     window.addEventListener('scroll', onScroll, { passive: true });
