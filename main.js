@@ -44,10 +44,12 @@
   }
 
   /* -------------------------------------------------------
-     SCROLL REVEAL (fade + scale)
+     SCROLL REVEAL (fade, scale, left, right)
   ------------------------------------------------------- */
+  var allRevealClasses = '.reveal-fade, .reveal-up, .reveal-left, .reveal-right';
+
   if (!prefersReduced) {
-    var revealEls = document.querySelectorAll('.reveal-fade, .reveal-up');
+    var revealEls = document.querySelectorAll(allRevealClasses);
     var revealObs = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (entry.isIntersecting) {
@@ -58,10 +60,18 @@
     }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
     revealEls.forEach(function (el) { revealObs.observe(el); });
   } else {
-    document.querySelectorAll('.reveal-fade, .reveal-up').forEach(function (el) {
+    document.querySelectorAll(allRevealClasses).forEach(function (el) {
       el.classList.add('visible');
     });
   }
+
+  /* -------------------------------------------------------
+     WHY CARDS — staggered cascade (override inline --d)
+  ------------------------------------------------------- */
+  var whyCards = document.querySelectorAll('.why-card');
+  whyCards.forEach(function (card, i) {
+    card.style.setProperty('--d', (i * 0.12) + 's');
+  });
 
   /* -------------------------------------------------------
      ANIMATED NUMBER COUNTERS
@@ -97,8 +107,6 @@
 
   /* -------------------------------------------------------
      SERVICES — STICKY HORIZONTAL SCROLL
-     Vertical scroll drives horizontal card movement.
-     Fixed calculation: maxTranslate = scrollWidth - trackWrap clientWidth
   ------------------------------------------------------- */
   var servicesSection = document.querySelector('.services-section');
   var servicesTrack = document.querySelector('.services-track');
@@ -108,14 +116,12 @@
   function initServicesScroll() {
     if (!servicesSection || !servicesTrack || !servicesTrackWrap) return;
 
-    // On mobile (≤768px) use native horizontal scroll — JS scroll disabled
     if (window.innerWidth <= 768) {
       servicesTrack.style.transform = 'none';
       return;
     }
 
     if (prefersReduced) {
-      // No animation — let cards stack or show naturally
       servicesSection.style.height = 'auto';
       var stickyOuter = servicesSection.querySelector('.services-sticky-outer');
       if (stickyOuter) {
@@ -126,17 +132,14 @@
       return;
     }
 
-    // Disable native horizontal scroll since we drive it via vertical scroll
     servicesTrack.style.transform = 'translateX(0)';
 
-    // Cache layout measurements — recalculated on resize
     var sectionTop = 0;
     var sectionH = 0;
     var trackW = 0;
     var wrapW = 0;
 
     function measureLayout() {
-      // getBoundingClientRect gives position relative to viewport; add scrollY for document offset
       sectionTop = servicesSection.getBoundingClientRect().top + window.scrollY;
       sectionH = servicesSection.offsetHeight;
       trackW = servicesTrack.scrollWidth;
@@ -145,12 +148,9 @@
 
     function onScroll() {
       var viewH = window.innerHeight;
-
-      // Sticky phase: from when section top hits viewport top to when section bottom exits
       var scrollStart = sectionTop;
       var scrollEnd = sectionTop + sectionH - viewH;
       var scrollRange = scrollEnd - scrollStart;
-
       var scrolled = window.scrollY - scrollStart;
 
       if (scrollRange <= 0) {
@@ -160,10 +160,7 @@
       }
 
       var progress = Math.min(Math.max(scrolled / scrollRange, 0), 1);
-
-      // How far we need to slide: total track scrollWidth minus visible wrap width
       var maxTranslate = Math.max(trackW - wrapW, 0);
-
       var tx = progress * maxTranslate;
       servicesTrack.style.transform = 'translateX(-' + tx + 'px)';
 
@@ -172,7 +169,6 @@
 
     window.addEventListener('scroll', onScroll, { passive: true });
 
-    // Remeasure on resize (orientation change, font load, etc.)
     window.addEventListener('resize', function () {
       if (window.innerWidth <= 768) {
         servicesTrack.style.transform = 'none';
@@ -182,13 +178,11 @@
       onScroll();
     }, { passive: true });
 
-    // Run once after full page load so images/fonts don't affect measurement
     window.addEventListener('load', function () {
       measureLayout();
       onScroll();
     });
 
-    // Initial measurement + run
     measureLayout();
     onScroll();
   }
@@ -214,18 +208,26 @@
   }
 
   /* -------------------------------------------------------
-     HERO PARALLAX ON PHOTO (subtle depth)
+     HERO PARALLAX — orbs + photo depth
   ------------------------------------------------------- */
   if (!prefersReduced) {
     var heroOrb1 = document.querySelector('.orb-1');
     var heroOrb2 = document.querySelector('.orb-2');
+    var heroOrb3 = document.querySelector('.orb-3');
+    var heroPhotoImg = document.querySelector('.hero-photo-img');
     var ticking = false;
+
     window.addEventListener('scroll', function () {
       if (!ticking) {
         requestAnimationFrame(function () {
           var y = window.scrollY;
-          if (heroOrb1) heroOrb1.style.transform = 'translateY(' + (y * 0.15) + 'px)';
-          if (heroOrb2) heroOrb2.style.transform = 'translateY(' + (-y * 0.08) + 'px)';
+          if (heroOrb1) heroOrb1.style.transform = 'translateY(' + (y * 0.14) + 'px)';
+          if (heroOrb2) heroOrb2.style.transform = 'translateY(' + (-y * 0.09) + 'px)';
+          if (heroOrb3) heroOrb3.style.transform = 'translateY(' + (y * 0.06) + 'px)';
+          /* Subtle parallax on the hero photo */
+          if (heroPhotoImg) {
+            heroPhotoImg.style.transform = 'translateY(' + (y * 0.18) + 'px) scale(1.02)';
+          }
           ticking = false;
         });
         ticking = true;
@@ -260,12 +262,13 @@
 
       btn.innerHTML = 'Sending...';
       btn.disabled = true;
-      btn.style.opacity = '0.7';
+      btn.style.opacity = '0.75';
+      btn.style.animation = 'none';
 
       setTimeout(function () {
         btn.innerHTML = 'Request Sent! <span class="btn-arrow">&#10003;</span>';
         btn.style.background = '#16a34a';
-        btn.style.boxShadow = '0 4px 32px rgba(22,163,74,0.45)';
+        btn.style.boxShadow = '0 4px 32px rgba(22,163,74,0.5)';
         btn.style.opacity = '1';
         setTimeout(function () {
           form.reset();
@@ -273,6 +276,7 @@
           btn.disabled = false;
           btn.style.background = '';
           btn.style.boxShadow = '';
+          btn.style.animation = '';
         }, 3000);
       }, 1200);
     });
