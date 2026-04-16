@@ -1,100 +1,116 @@
 # Perch Bookkeeping — Nigel's Audit
 **Date:** 2026-04-09
-**Audited at:** 375px mobile viewport
-**Build status:** New build
+**Previous Score:** 6.8
+**Audited at:** 375px mobile viewport (primary), 1280px desktop (secondary)
 
 ---
 
-## Overall Score: 6.8 / 10
+## Overall Score: 7.2 / 10
 
-A genuinely competent first build. The design language is consistent, the copy is strong, and the mobile structure is mostly sound. However the aesthetic skews too far toward fintech/SaaS and not enough toward the warm, personal feel a small-business owner expects from a bookkeeper. Several mobile layout details need tightening before this earns trust from a real prospect landing cold.
+A meaningful step forward from 6.8. The amber palette integration is cohesive rather than tacked-on, the mobile hero redesign is structurally sound, and the services section now degrades gracefully on mobile (snap-scroll, `transform: none !important`). Several issues from the prior audit have been genuinely resolved. What holds this back from 7.5 and above: the site still reads as a competent AI-generated template rather than a distinct identity for Ryan Hoover's specific business, the form remains a lead-killing dummy, and some execution details at the detail level still need tightening.
 
 ---
 
 ## Section Scores
 
-### 1. First Impression / Hero — 6.5 / 10
-The mobile hero is a bold concept: Ryan's photo fills the background, content floats over a navy-to-dark gradient. In principle this is strong. In practice at 375px:
+### 1. First Impression / Hero — 7.0 / 10
+The workspace photo background on mobile (Unsplash `photo-1454165804606-c3d57bc86b40`) is a practical improvement over relying on Ryan's headshot. Content now stacks from the bottom — headline, sub, CTAs, stats — which is the right reading order for a high-stakes hero.
 
-- The eyebrow pill ("Veteran-Owned · Pennsylvania-Based · 100% Virtual") is forced into `white-space: nowrap` at 10px and clips or strains readability on very small screens. `text-overflow: ellipsis` masks the problem rather than solving it.
-- The headline ("Your books, finally under control.") is excellent copy and scans well at mobile sizes.
-- The CTA stack (two full-width buttons) is well-executed — good tap targets, clear hierarchy.
-- The three stat counters at the bottom (150+ clients, 10yr service, 100% virtual) animate nicely but feel out of place at the foot of a hero that is already visually dense. The "10yr Military Service" label is an awkward read for someone who came looking for a bookkeeper — it signals the human story but the phrasing is terse.
-- The background photo gradient works but the darkened photo loses Ryan's face almost entirely on older OLED phones — defeating the purpose of putting a human face front-and-centre.
+What is working:
+- The gradient overlay (`rgba(7,15,28,0.35)` to `0.98`) is well-calibrated: the photo is visible at the top without compromising text legibility.
+- Content-from-bottom layout prevents the eyebrow pill crowding the top nav area.
+- Full-width amber CTA is prominent and immediately tappable.
 
-### 2. Navigation (Mobile) — 7.0 / 10
-- Hamburger is correctly sized, aria-labeled, and animates cleanly into an X.
-- Full-screen drawer is readable: 16px font, white on near-black, good tap targets.
-- The logo (inverted white on the navy hero) is correct but disappears on scroll when the header hasn't yet turned dark — there is a brief moment scrolling out of the hero where the white logo sits against a white background before the `scrolled` class kicks in. At 375px this is a flash users will see.
-- "Free Consult" pill CTA in the drawer is centered and prominent. Good.
+Remaining concerns:
+- The eyebrow pill text at `font-size: 10px` and `letter-spacing: 0.08em` on a 375px viewport is genuinely strained. "Veteran-Owned · Pennsylvania-Based · 100% Virtual" is 45 characters; at 10px the middle separator dots read as noise. Consider two lines or just "Veteran-Owned · 100% Virtual".
+- The workspace background photo is entirely generic — it communicates "professional office" but nothing about bookkeeping, Ryan, or Pennsylvania. The previous build's intent (Ryan's face) was personally differentiated. This replaces identity with aesthetics.
+- Stats row at the bottom: "10yr Military Service" is still an awkward stat in a bookkeeping context. A prospect visiting for the first time reads "150+ Clients Served" and "100% Virtual" as useful. "10yr Military Service" reads as a resume detail, not a trust signal for someone who needs their receipts sorted.
 
-### 3. Content Sections — Why Perch — 6.5 / 10
-- Single-column card stack on mobile is appropriate.
-- Cards are `max-width: 440px; margin: 0 auto;` but at 375px with 24px side padding there is no centering issue.
-- The icon squares (52px, rounded, sky-blue tint) are tasteful and not overworked.
-- "Feels Like Family" is the weakest card heading — vague for a B2B service. A prospect scanning quickly may read it as folksy and skip.
-- Body text at 14px / 1.7 line-height on `#526378` is marginally low contrast on the `#f7faff` card background. Passes WCAG AA just barely; worth testing on a physical device.
+### 2. Navigation (Mobile) — 7.5 / 10
+Resolves prior issues. Full-screen overlay is clean, centered links at `1.2rem` with 52px min-height are proper. The `aria-expanded` toggle, X animation, and outside-click close are all correctly implemented.
 
-### 4. Services (Horizontal Scroll) — 5.5 / 10
-This is the most problematic section at mobile. The horizontal scroll-jacking mechanic — 300vh of vertical scroll driving a translateX — is a well-known desktop pattern that consistently breaks trust on mobile:
+One remaining technical concern: the nav-logo has `filter: brightness(0) invert(1)` permanently applied — meaning the white logo sits against the transparent (pre-scroll) header. At page top this is fine against the dark hero. But the `scrolled` class only applies at `scrollY > 20`. On a slow 3G device or if the scroll event fires slightly late, there is a 1–2 frame flash where the white logo is invisible against the white background sections as the user scrolls from the hero into the `#f7f5f2` why-section. This was flagged in the prior audit and has not been fixed. It requires setting a fallback background on `.site-header` when NOT scrolled (e.g., a dark-to-transparent gradient at the very top), or keeping the header dark by default.
 
-- At 375px, users encounter a section that does not behave like any section before it. There is no affordance (no "swipe" label, no visible second card peeking) to indicate horizontal content exists.
-- The progress bar at the bottom is 2px tall and nearly invisible.
-- Service cards at 300px width at 375px viewport leave 75px of visible gutter — the second card peeks barely 15–20px before the right edge, which is not enough visual signal.
-- The scroll-jacking requires the user to scroll the entire 300vh distance before the page continues, which on mobile feels like the page is frozen.
-- **Recommendation:** On mobile, abandon the sticky scroll-jacking entirely and render the three service cards as a simple swipeable snap-carousel or a stacked layout. The JS already degrades for `prefers-reduced-motion` — a similar path should be taken for narrow viewports.
+### 3. Why Perch — 7.0 / 10
+The amber icon boxes replacing sky-blue is a genuine visual improvement. The amber-glow icon hover (`box-shadow: 0 0 24px rgba(232,146,58,0.35)`) is tasteful and adds warmth without looking garish. "Always Responsive" replacing "Feels Like Family" is strictly better copy.
 
-### 5. About Ryan — 7.0 / 10
-- Photo-plus-text stacked layout works well at 375px.
-- The "Veteran-Owned" badge positioned `bottom: -18px; right: -18px` clips against the page edge at 375px. The badge is absolutely positioned relative to `.about-photo-col` which has no overflow:hidden, so it can escape, but right: -18px on a 375px viewport means it bleeds 18px outside the photo frame. At minimum it should be `right: 0` on mobile.
-- Copy is warm and credible — the three paragraphs tell a genuine story without over-claiming.
-- Email Ryan and phone number as paired CTAs is good. Both links are properly tappable.
+However: four cards in a single-column stack on mobile means a prospect on a 375px phone scrolls through all four before reaching Services. At 375px each card is roughly 220–240px tall. Four cards = approximately 960–1000px of scroll. That is a long single-column section. No affordance exists to skip it. Consider either limiting to three cards on mobile, or adding a "See all" toggle.
+
+The amber top-bar (`height: 3px; background: linear-gradient(to right, var(--amber), var(--amber-soft))`) on hover is a nice detail but at 3px is nearly invisible on some non-Retina displays.
+
+### 4. Services — 7.0 / 10
+This is the section with the largest delta from the prior audit (5.5 to 7.0). The mobile degradation to snap-scroll is correct and well-executed:
+- `scroll-snap-type: x mandatory` on the wrapper
+- `scroll-snap-align: start` on each card
+- `transform: none !important` overriding the JS translateX
+- JS correctly bails out at `window.innerWidth <= 768`
+
+What remains imperfect:
+- Card width of `310px` on a `375px` viewport leaves 65px of visible gutter, of which 20px is left padding. The second card peeks approximately 25–30px, which is marginal as a scroll affordance. A width of `290px` would give the second card a more visible 45px peek. Not broken, but close.
+- No scroll affordance label ("swipe" / "→") exists. The progress bar is hidden on mobile. A user landing cold has no signal that horizontal content exists.
+- The JS `initServicesScroll` re-fires on `resize` and `load` but measures `getBoundingClientRect` at call time. If fonts load after the measurement, `sectionTop` may be slightly off on desktop. Low priority but worth noting.
+
+### 5. About Ryan — 7.5 / 10
+Solid improvement. The badge overflow fix (`right: 4px; bottom: -12px` at mobile) resolves the prior layout bleed. The directional reveal is correctly converted to a vertical fade on mobile (`reveal-left` overridden at 768px breakpoint). Copy is genuine and readable. About-content `text-align: center` on mobile with centered CTAs is handled properly.
+
+One note: the `about-photo-frame` has `aspect-ratio: 3/4` on desktop but no mobile aspect-ratio override. At `max-width: 100%` on a 375px viewport the photo frame becomes 375px wide at a 3:4 ratio, resulting in a 500px tall photo. That is a significant amount of screen real estate before the text content. Worth constraining with `max-height: 360px` at mobile.
 
 ### 6. Process — 7.5 / 10
-- Three steps in a single-column stack on mobile is clean.
-- The connector line (`::before` pseudo-element) correctly hidden on mobile.
-- Step numbers are large, blue circles — immediately scannable.
-- Copy under each step is crisp and benefit-led. This is the best-written section.
-- CTA at the bottom duplicates the hero CTA — consistent and low-friction.
+Unchanged from prior audit. Continues to be the cleanest, best-written section. Single-column mobile, centered, alt-colored step-2 in amber — all correct. Step-2 amber number circle (`background: var(--amber)`) adds a pleasant rhythm to the otherwise blue-dominant section. The gradient connector line (`::before` pseudo) hidden correctly on mobile.
 
-### 7. Quote Section — 6.0 / 10
-- "Small business owner, Perch client" is an anonymous attribution. Real users are rightly skeptical of unattributed quotes. It reads as filler.
-- The quote text itself ("I used to dread opening QuickBooks...") is specific enough to feel real, which partially rescues it.
-- The giant `"` at 80px on mobile dominates the visual before the quote arrives — it is more decorative than useful at this size.
-- The navy-mid background with radial glow is tasteful, not overwrought.
+### 7. Quote Section — 7.0 / 10 (up from 6.0)
+Prior audit's top recommendation was addressed: attribution changed to "Maria T., owner of a landscaping company in Lancaster, PA" — specific, credible, and local. This is a meaningful improvement. The quote itself remains strong copy.
 
-### 8. Contact Form — 7.0 / 10
-- Form fields are full-width and well-sized (min-height: 44px) — good touch targets.
-- Two-column first/last name row correctly collapses to single column on mobile.
-- Label typography (12px uppercase, 50% white opacity) is somewhat hard to read in ambient light.
-- The form simulates a submission (setTimeout 1200ms then success) but does not actually send data. For a real business, this is a significant gap — any lead who fills this out is lost. The form needs a real backend (Formspree, Netlify Forms, or similar) before launch.
-- "We'll be in touch within one business day" is a good micro-copy promise.
+The `quote-mark` at `font-size: 120px` (80px on mobile) is still decorative excess. At `opacity: 0.35` it is not a readability problem, but at 80px on a 375px viewport it occupies roughly 15% of the screen before the quote text arrives. It is a visual convention that signals "template" to design-literate visitors.
 
-### 9. Visual Identity / Design Consistency — 6.0 / 10
-- The deep navy + electric blue palette is professional but heavily associated with fintech, SaaS, and crypto. For a bookkeeping firm targeting local small businesses (plumbers, landscapers, boutique shops), this creates a subtle tone mismatch. The prospect may feel it is built for a tech company, not for them.
-- Typography pairing (Syne headings + Inter body) is clean and readable. The italic accent on section headings (e.g., "finally", "clean books") is a nice touch.
-- The glow-orb background elements, pulsing dot, and scroll-line animation add atmosphere without being distracting — these are handled with restraint.
-- The site looks AI-generated in its layout conventions: hero with stat bar, 4-up feature grid, horizontal scroll services, testimonial strip. Each element is well-executed but the combination is a Claude/Framer template fingerprint. Nothing signals "this is specifically Perch Bookkeeping."
+The dual radial glow (`rgba(232,146,58,0.08)` and `rgba(45,142,212,0.08)`) behind the quote is so subtle as to be invisible in most viewing conditions, which is fine — it does not distract.
 
-### 10. Trust & Conversion — 6.5 / 10
-- Real phone number and email are present — high trust signal.
-- Business hours are listed — good.
-- No testimonials with names, no Google reviews link, no BBB or ProAdvisor badge.
-- The Veteran-Owned angle is surfaced in four places (eyebrow, stats, badge, about) — appropriate repetition without being exploitative.
-- "150+ Clients Served" is a credible specific number. Believable at this stage of business.
-- No pricing information, which is standard for the industry — fine.
-- The form not sending is a hard launch blocker.
+### 8. Contact Form — 6.5 / 10
+No change from prior audit. The form still does not send. This is the most commercially damaging issue on the entire site. A landscaping company owner in Lancaster fills this form out at 9pm because they finally got around to it — they get a success message, Ryan gets nothing, and the lead is permanently lost. This is not a polish item; it is a functional gap that makes the site harmful to Ryan's business rather than helpful.
+
+Form-field amber focus ring (`border-color: var(--amber); box-shadow: 0 0 0 3px rgba(232,146,58,0.12)`) is a nice consistency touch. The form-note text at `rgba(255,255,255,0.3)` is borderline unreadable — at least `0.45` on a dark background.
+
+The `form-title` at `1.4rem / Syne` is well-sized and readable. The field labels at `12px / rgba(255,255,255,0.5) / uppercase` are marginally low contrast — contrast ratio approximately 4.2:1 against `rgba(255,255,255,0.06)` background, which passes AA (4.5:1 is the threshold for small text) only narrowly. On a real device in sunlight this will fail.
+
+### 9. Visual Identity / Design Consistency — 7.0 / 10
+The amber integration has meaningfully warmed the palette. The marquee in amber (rather than navy or sky) signals energy and draws the eye. The amber accent on `why-icon` backgrounds, `process-step-2`, and CTAs creates a consistent warmth thread through the site.
+
+What has not changed: the macro layout template fingerprint. Hero with stat row, feature grid, horizontal-scroll services, single testimonial, split contact — this is the exact same structural skeleton as hundreds of AI-generated sites. Nothing signals "this is specifically Perch, specifically Ryan, specifically Pennsylvania." The workspace background photo is a stock image. The site could, without any copy changes, represent a law firm, a marketing agency, or an IT managed services company.
+
+The SVG wave dividers are well-executed technically. Six unique waves prevents monotony. However, six waves in a single-page site (one between every section) is visually heavy — each one is 70px of non-content, totalling 420px of pure decoration. On a site where every section change already has a colour shift (dark → light → dark), the waves double up on an existing signal. Consider removing every other wave; the alternating backgrounds communicate section changes without them.
+
+### 10. Trust and Conversion — 7.0 / 10
+Real phone, real email, real hours, specific client count, specific local attribution on the testimonial — all good. The Veteran-Owned angle is surfaced consistently without being exploitative.
+
+Remaining gaps:
+- Form does not send (flagged repeatedly — highest priority).
+- No Google Reviews link, no ProAdvisor badge, no BBB.
+- No pricing signal (standard for industry; fine).
+- No social proof volume: one testimonial is better than zero, but a single quote from "Maria T." carries less weight than "over 150 clients served" — which is already in the hero stats. A second testimonial or a Google review count would close the loop.
 
 ---
 
-## Top 5 Recommendations
+## Delta from Previous Audit
 
-1. **Fix the Services section on mobile.** The scroll-jacking 300vh mechanic at 375px gives users the sensation that the page is frozen. Replace with a CSS `scroll-snap` swipeable row or a fully stacked layout on viewports under 768px. This is the single largest UX failure on the site.
+| Section | Prior | Current | Delta |
+|---|---|---|---|
+| Hero | 6.5 | 7.0 | +0.5 |
+| Navigation | 7.0 | 7.5 | +0.5 |
+| Why Perch | 6.5 | 7.0 | +0.5 |
+| Services | 5.5 | 7.0 | +1.5 |
+| About Ryan | 7.0 | 7.5 | +0.5 |
+| Process | 7.5 | 7.5 | 0 |
+| Quote | 6.0 | 7.0 | +1.0 |
+| Contact Form | 7.0 | 6.5 | -0.5 |
+| Visual Identity | 6.0 | 7.0 | +1.0 |
+| Trust/Conversion | 6.5 | 7.0 | +0.5 |
 
-2. **Wire up the contact form to a real backend before launch.** Every lead submitted is currently silently discarded. Use Formspree (free tier) or Netlify Forms. This takes under 30 minutes and is a hard business requirement, not a polish item.
+---
 
-3. **Fix the About section badge overflow on mobile.** `right: -18px` on `.about-badge` causes it to escape the layout boundary at 375px. Change to `right: 4px` and `bottom: -12px` on the `@media (max-width: 768px)` breakpoint.
+## Top 3 Priorities
 
-4. **Rethink the palette or the supporting imagery to feel more accessible to non-tech small business owners.** The deep navy / electric blue SaaS aesthetic is competent but generic for this client profile. Even a supporting texture, warmer accent, or a more local/human detail (Pennsylvania imagery, handshake, desk) would differentiate. The hero photo of Ryan is the warmest element — lean into it more, not less.
+1. **Wire up the contact form.** Use Formspree, Netlify Forms, or any real backend. This is a hard commercial requirement. Every lead currently submitted is permanently lost. The site is actively damaging Ryan's business until this is fixed.
 
-5. **Replace the anonymous quote with a real attributed testimonial or remove it.** "Small business owner, Perch client" signals placeholder copy to a discerning visitor. A real first name, business type, and location (e.g., "Jane D., owner of a landscaping company in Lancaster, PA") increases conversion meaningfully. If real testimonials are not yet available, remove the section entirely rather than use a generic attribution.
+2. **Give the site a specific visual identity.** Replace the generic Unsplash workspace photo with something that says Perch or Pennsylvania. Add one differentiating design detail that does not appear in any other bookkeeping or fintech site. The amber palette is warm but the layout template is indistinguishable from a hundred competitors.
+
+3. **Reduce the six SVG wave dividers to three.** Six consecutive waves across one page is visual overload and adds 420px of non-content scroll. Keep waves at the three most important transitions (hero-to-marquee, services-to-about, quote-to-contact) and let the alternating background colours do the work elsewhere.
