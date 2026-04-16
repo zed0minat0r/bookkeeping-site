@@ -5,65 +5,67 @@
 (function () {
   'use strict';
 
-  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* ---------- NAV SCROLL STATE ---------- */
-  const header = document.querySelector('.site-header');
-  function updateHeaderShadow() {
+  /* -------------------------------------------------------
+     NAV SCROLL STATE
+  ------------------------------------------------------- */
+  var header = document.querySelector('.site-header');
+  function updateHeader() {
     if (!header) return;
-    header.classList.toggle('scrolled', window.scrollY > 12);
+    header.classList.toggle('scrolled', window.scrollY > 20);
   }
-  updateHeaderShadow();
-  window.addEventListener('scroll', updateHeaderShadow, { passive: true });
+  updateHeader();
+  window.addEventListener('scroll', updateHeader, { passive: true });
 
-  /* ---------- MOBILE NAV TOGGLE ---------- */
-  const toggle = document.querySelector('.nav-toggle');
-  const navLinks = document.querySelector('.nav-links');
+  /* -------------------------------------------------------
+     MOBILE NAV TOGGLE
+  ------------------------------------------------------- */
+  var toggle = document.querySelector('.nav-toggle');
+  var navLinks = document.querySelector('.nav-links');
   if (toggle && navLinks) {
     toggle.addEventListener('click', function () {
-      const expanded = this.getAttribute('aria-expanded') === 'true';
+      var expanded = this.getAttribute('aria-expanded') === 'true';
       this.setAttribute('aria-expanded', !expanded);
       navLinks.classList.toggle('open', !expanded);
     });
-
-    // Close on link click
     navLinks.querySelectorAll('a').forEach(function (link) {
       link.addEventListener('click', function () {
         toggle.setAttribute('aria-expanded', 'false');
         navLinks.classList.remove('open');
       });
     });
-
-    // Close on outside click
     document.addEventListener('click', function (e) {
-      if (!header.contains(e.target)) {
+      if (header && !header.contains(e.target)) {
         toggle.setAttribute('aria-expanded', 'false');
         navLinks.classList.remove('open');
       }
     });
   }
 
-  /* ---------- SCROLL REVEAL ---------- */
+  /* -------------------------------------------------------
+     SCROLL REVEAL (fade + scale)
+  ------------------------------------------------------- */
   if (!prefersReduced) {
-    const revealEls = document.querySelectorAll('.reveal-up');
-    const revealObserver = new IntersectionObserver(function (entries) {
+    var revealEls = document.querySelectorAll('.reveal-fade, .reveal-up');
+    var revealObs = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (entry.isIntersecting) {
           entry.target.classList.add('visible');
-          revealObserver.unobserve(entry.target);
+          revealObs.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-
-    revealEls.forEach(function (el) { revealObserver.observe(el); });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    revealEls.forEach(function (el) { revealObs.observe(el); });
   } else {
-    // Immediately show all
-    document.querySelectorAll('.reveal-up').forEach(function (el) {
+    document.querySelectorAll('.reveal-fade, .reveal-up').forEach(function (el) {
       el.classList.add('visible');
     });
   }
 
-  /* ---------- NUMBER COUNTERS ---------- */
+  /* -------------------------------------------------------
+     ANIMATED NUMBER COUNTERS
+  ------------------------------------------------------- */
   function animateCounter(el, target, duration) {
     if (prefersReduced) { el.textContent = target; return; }
     var start = 0;
@@ -71,7 +73,6 @@
     function step(ts) {
       if (!startTime) startTime = ts;
       var progress = Math.min((ts - startTime) / duration, 1);
-      // Ease out quad
       var ease = 1 - Math.pow(1 - progress, 3);
       el.textContent = Math.round(ease * target);
       if (progress < 1) requestAnimationFrame(step);
@@ -79,71 +80,80 @@
     requestAnimationFrame(step);
   }
 
-  var counterEls = document.querySelectorAll('.trust-num[data-target]');
-  if (counterEls.length > 0) {
-    var counterObserver = new IntersectionObserver(function (entries) {
+  var counterEls = document.querySelectorAll('.stat-num[data-target]');
+  if (counterEls.length) {
+    var counterObs = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (entry.isIntersecting) {
           var el = entry.target;
           var target = parseInt(el.getAttribute('data-target'), 10);
           animateCounter(el, target, 1800);
-          counterObserver.unobserve(el);
+          counterObs.unobserve(el);
         }
       });
     }, { threshold: 0.5 });
-
-    counterEls.forEach(function (el) { counterObserver.observe(el); });
+    counterEls.forEach(function (el) { counterObs.observe(el); });
   }
 
-  /* ---------- FORM SUBMIT ---------- */
-  var form = document.querySelector('.contact-form');
-  if (form) {
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
+  /* -------------------------------------------------------
+     SERVICES — STICKY HORIZONTAL SCROLL
+     250vh section, vertical scroll drives horizontal card movement
+  ------------------------------------------------------- */
+  var servicesSection = document.querySelector('.services-section');
+  var servicesTrack = document.querySelector('.services-track');
+  var progressBar = document.querySelector('.services-progress-bar');
 
-      var btn = form.querySelector('.btn-submit');
-      var originalText = btn.textContent;
+  function initServicesScroll() {
+    if (!servicesSection || !servicesTrack) return;
 
-      // Simple validation
-      var required = form.querySelectorAll('[required]');
-      var valid = true;
-      required.forEach(function (field) {
-        field.style.borderColor = '';
-        if (!field.value.trim()) {
-          field.style.borderColor = '#ef4444';
-          valid = false;
-        }
-      });
+    function onScroll() {
+      var sectionTop = servicesSection.getBoundingClientRect().top + window.scrollY;
+      var sectionH = servicesSection.offsetHeight;
+      var viewH = window.innerHeight;
 
-      if (!valid) {
-        var firstErr = form.querySelector('[required][style]');
-        if (firstErr) firstErr.focus();
+      // Scrollable distance within the sticky phase
+      var scrollStart = sectionTop;
+      var scrollEnd = sectionTop + sectionH - viewH;
+      var scrolled = window.scrollY - scrollStart;
+      var scrollRange = scrollEnd - scrollStart;
+
+      if (scrolled < 0 || scrollRange <= 0) {
+        servicesTrack.style.transform = 'translateX(0)';
+        if (progressBar) progressBar.style.width = '0%';
         return;
       }
 
-      btn.textContent = 'Sending...';
-      btn.disabled = true;
-      btn.style.opacity = '0.7';
+      var progress = Math.min(Math.max(scrolled / scrollRange, 0), 1);
 
-      // Simulate submission — swap in success state
-      setTimeout(function () {
-        btn.textContent = 'Request Sent!';
-        btn.style.background = '#16a34a';
-        btn.style.boxShadow = '0 4px 20px rgba(22,163,74,0.35)';
-        btn.style.opacity = '1';
+      // How far to translate: track width minus visible viewport width
+      var trackW = servicesTrack.scrollWidth;
+      var containerW = servicesSection.offsetWidth;
+      var maxTranslate = Math.max(trackW - containerW + 80, 0); // 80px for left padding
 
-        setTimeout(function () {
-          form.reset();
-          btn.textContent = originalText;
-          btn.disabled = false;
-          btn.style.background = '';
-          btn.style.boxShadow = '';
-        }, 3000);
-      }, 1200);
-    });
+      var tx = progress * maxTranslate;
+      servicesTrack.style.transform = 'translateX(-' + tx + 'px)';
+
+      if (progressBar) progressBar.style.width = (progress * 100) + '%';
+    }
+
+    if (!prefersReduced) {
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+    } else {
+      // Show all cards normally, no sticky scroll
+      servicesSection.style.height = 'auto';
+      var stickyOuter = servicesSection.querySelector('.services-sticky-outer');
+      if (stickyOuter) { stickyOuter.style.position = 'relative'; stickyOuter.style.height = 'auto'; }
+    }
   }
 
-  /* ---------- SMOOTH ANCHOR OFFSET (nav height) ---------- */
+  // Wait for layout
+  window.addEventListener('load', initServicesScroll);
+  initServicesScroll();
+
+  /* -------------------------------------------------------
+     SMOOTH ANCHOR SCROLL WITH NAV OFFSET
+  ------------------------------------------------------- */
   if (!prefersReduced) {
     document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
       anchor.addEventListener('click', function (e) {
@@ -159,22 +169,69 @@
     });
   }
 
-  /* ---------- HERO PARALLAX (subtle) ---------- */
+  /* -------------------------------------------------------
+     HERO PARALLAX ON PHOTO (subtle depth)
+  ------------------------------------------------------- */
   if (!prefersReduced) {
-    var heroUnsplash = document.querySelector('.hero-unsplash');
-    if (heroUnsplash) {
-      var ticking = false;
-      window.addEventListener('scroll', function () {
-        if (!ticking) {
-          requestAnimationFrame(function () {
-            var y = window.scrollY;
-            heroUnsplash.style.transform = 'translateY(' + y * 0.25 + 'px)';
-            ticking = false;
-          });
-          ticking = true;
+    var heroOrb1 = document.querySelector('.orb-1');
+    var heroOrb2 = document.querySelector('.orb-2');
+    var ticking = false;
+    window.addEventListener('scroll', function () {
+      if (!ticking) {
+        requestAnimationFrame(function () {
+          var y = window.scrollY;
+          if (heroOrb1) heroOrb1.style.transform = 'translateY(' + (y * 0.15) + 'px)';
+          if (heroOrb2) heroOrb2.style.transform = 'translateY(' + (-y * 0.08) + 'px)';
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }, { passive: true });
+  }
+
+  /* -------------------------------------------------------
+     FORM SUBMIT
+  ------------------------------------------------------- */
+  var form = document.querySelector('.contact-form');
+  if (form) {
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var btn = form.querySelector('.btn-submit');
+      var originalHTML = btn.innerHTML;
+
+      var required = form.querySelectorAll('[required]');
+      var valid = true;
+      required.forEach(function (field) {
+        field.style.borderColor = '';
+        if (!field.value.trim()) {
+          field.style.borderColor = '#ef4444';
+          valid = false;
         }
-      }, { passive: true });
-    }
+      });
+      if (!valid) {
+        var firstErr = form.querySelector('[required]');
+        if (firstErr) firstErr.focus();
+        return;
+      }
+
+      btn.innerHTML = 'Sending...';
+      btn.disabled = true;
+      btn.style.opacity = '0.7';
+
+      setTimeout(function () {
+        btn.innerHTML = 'Request Sent! <span class="btn-arrow">&#10003;</span>';
+        btn.style.background = '#16a34a';
+        btn.style.boxShadow = '0 4px 32px rgba(22,163,74,0.45)';
+        btn.style.opacity = '1';
+        setTimeout(function () {
+          form.reset();
+          btn.innerHTML = originalHTML;
+          btn.disabled = false;
+          btn.style.background = '';
+          btn.style.boxShadow = '';
+        }, 3000);
+      }, 1200);
+    });
   }
 
 })();
