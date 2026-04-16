@@ -123,14 +123,24 @@
     // Disable native horizontal scroll since we drive it via vertical scroll
     servicesTrack.style.transform = 'translateX(0)';
 
+    // Cache layout measurements — recalculated on resize
+    var sectionTop = 0;
+    var sectionH = 0;
+    var trackW = 0;
+    var wrapW = 0;
+
+    function measureLayout() {
+      // getBoundingClientRect gives position relative to viewport; add scrollY for document offset
+      sectionTop = servicesSection.getBoundingClientRect().top + window.scrollY;
+      sectionH = servicesSection.offsetHeight;
+      trackW = servicesTrack.scrollWidth;
+      wrapW = servicesTrackWrap.clientWidth;
+    }
+
     function onScroll() {
-      // Get section bounds relative to document
-      var rect = servicesSection.getBoundingClientRect();
-      var sectionTop = rect.top + window.scrollY;
-      var sectionH = servicesSection.offsetHeight;
       var viewH = window.innerHeight;
 
-      // Sticky phase: from when section hits top to when section bottom hits viewport bottom
+      // Sticky phase: from when section top hits viewport top to when section bottom exits
       var scrollStart = sectionTop;
       var scrollEnd = sectionTop + sectionH - viewH;
       var scrollRange = scrollEnd - scrollStart;
@@ -146,8 +156,6 @@
       var progress = Math.min(Math.max(scrolled / scrollRange, 0), 1);
 
       // How far we need to slide: total track scrollWidth minus visible wrap width
-      var trackW = servicesTrack.scrollWidth;
-      var wrapW = servicesTrackWrap.clientWidth;
       var maxTranslate = Math.max(trackW - wrapW, 0);
 
       var tx = progress * maxTranslate;
@@ -157,8 +165,21 @@
     }
 
     window.addEventListener('scroll', onScroll, { passive: true });
-    // Run once after fonts/images settle
-    window.addEventListener('load', onScroll);
+
+    // Remeasure on resize (orientation change, font load, etc.)
+    window.addEventListener('resize', function () {
+      measureLayout();
+      onScroll();
+    }, { passive: true });
+
+    // Run once after full page load so images/fonts don't affect measurement
+    window.addEventListener('load', function () {
+      measureLayout();
+      onScroll();
+    });
+
+    // Initial measurement + run
+    measureLayout();
     onScroll();
   }
 

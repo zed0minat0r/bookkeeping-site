@@ -1164,7 +1164,7 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   font-size: 15px;
   color: var(--text-light);
   transition: color 0.2s;
-  padding: 12px 0;
+  padding: 13px 0;
   min-height: 44px;
 }
 .contact-details li a:hover { color: var(--sky-bright); }
@@ -1496,39 +1496,80 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 
   /* ---- End mobile hero ---- */
 
+  /* WHY SECTION — center on mobile */
   .why-section { padding: 80px 0; }
+  .why-header { text-align: center; }
   .why-grid { grid-template-columns: 1fr; max-width: 440px; margin: 0 auto; }
 
-  .services-section { height: 320vh; }
-  .services-sticky-inner { padding-left: 20px; padding-top: var(--nav-h); }
-  .services-header {
-    padding-right: 20px;
-    padding-top: 24px;
-    padding-bottom: 20px;
+  /* SERVICES — sticky horizontal scroll, big title */
+  .services-section { height: 280vh; }
+  .services-sticky-outer { height: 100vh; overflow: hidden; }
+  .services-sticky-inner {
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
   }
-  .services-header .section-heading { font-size: clamp(2rem, 8vw, 2.8rem); }
-  .services-track { padding-right: 20px; }
-  .service-card { width: 290px; padding: 28px 22px; border-radius: 20px; }
-  .services-progress { margin-right: 20px; margin-bottom: 20px; }
+  .services-header {
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: calc(var(--nav-h) + 20px);
+    padding-bottom: 16px;
+    text-align: center;
+    max-width: 100%;
+  }
+  .services-header .section-label {
+    text-align: center;
+    display: block;
+    width: 100%;
+  }
+  .services-header .section-heading {
+    font-size: clamp(2.4rem, 9vw, 3.2rem);
+    text-align: center;
+    line-height: 1.05;
+  }
+  .services-sub {
+    max-width: 100%;
+    text-align: center;
+    font-size: 14px;
+  }
+  .services-track { padding-left: 20px; padding-right: 20px; }
+  .service-card { width: 310px; padding: 28px 22px; border-radius: 20px; }
+  .services-progress { margin-left: 20px; margin-right: 20px; margin-bottom: 20px; }
 
+  /* ABOUT — center on mobile */
   .about-section { padding: 80px 0; }
   .about-inner { padding: 0 24px; gap: 36px; }
   .about-photo-col { max-width: 100%; }
+  .about-content { text-align: center; }
+  .about-content .section-label { text-align: center; }
+  .about-actions { justify-content: center; }
 
+  /* PROCESS — center on mobile */
   .process-section { padding: 80px 0; }
+  .process-header { text-align: center; }
   .process-steps { grid-template-columns: 1fr; gap: 32px; max-width: 400px; }
   .process-steps::before { display: none; }
 
+  /* QUOTE */
   .quote-section { padding: 72px 24px; }
   .quote-mark { font-size: 80px; }
 
+  /* CONTACT — center on mobile */
   .contact-section { padding: 80px 0; }
   .contact-inner { padding: 0 24px; gap: 36px; }
+  .contact-left { text-align: center; }
+  .contact-left .section-label { text-align: center; }
+  .contact-details { align-items: center; }
+  .contact-details li a,
+  .contact-details li span { justify-content: center; }
   .contact-form { padding: 32px 24px; }
   .form-row { grid-template-columns: 1fr; }
 
-  .footer-inner { padding: 0 24px; flex-direction: column; align-items: flex-start; gap: 24px; }
-  .footer-nav { flex-wrap: wrap; }
+  /* FOOTER — center on mobile */
+  .footer-inner { padding: 0 24px; flex-direction: column; align-items: center; gap: 24px; text-align: center; }
+  .footer-brand { align-items: center; }
+  .footer-nav { flex-wrap: wrap; justify-content: center; }
+  .footer-copy { text-align: center; }
 }
 
 /* Extra-tight fix for very small phones */
@@ -1536,4 +1577,6 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   .hero-eyebrow { font-size: 10px; letter-spacing: 0.06em; }
   .hero-headline { font-size: 2.4rem; }
   .stat-label { font-size: 12px; }
+  .services-header .section-heading { font-size: 2.1rem; }
+  .service-card { width: 280px; }
 }
