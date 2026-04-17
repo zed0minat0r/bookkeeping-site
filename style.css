@@ -684,18 +684,32 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
    ========================================================== */
 .why-section {
   padding: 120px 0 100px;
-  background: var(--off-white);
+  background: var(--navy);
   position: relative;
   overflow: hidden;
 }
 
-/* Grain texture on light sections */
+/* Dot-grid background overlay */
 .why-section::after {
   content: '';
   position: absolute;
   inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.035'/%3E%3C/svg%3E");
-  background-size: 256px 256px;
+  background-image: radial-gradient(circle, rgba(45,142,212,0.08) 1px, transparent 1px);
+  background-size: 28px 28px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Ambient glow orbs in section */
+.why-section::before {
+  content: '';
+  position: absolute;
+  top: -120px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 700px;
+  height: 400px;
+  background: radial-gradient(ellipse, rgba(45,142,212,0.12) 0%, transparent 70%);
   pointer-events: none;
   z-index: 0;
 }
@@ -707,6 +721,17 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   z-index: 1;
 }
 
+/* Override heading color for dark section */
+.why-header .section-heading {
+  color: var(--white);
+}
+.why-header .section-heading em {
+  color: var(--amber-soft);
+}
+.why-header .section-label {
+  color: var(--sky-bright);
+}
+
 .why-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -715,11 +740,17 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   z-index: 1;
 }
 
+/* Per-card accent colors via data attributes */
+.why-card[data-accent="amber"]  { --card-accent: #e8923a; --card-glow: rgba(232,146,58,0.28); --card-glow-lg: rgba(232,146,58,0.14); }
+.why-card[data-accent="sky"]    { --card-accent: #3fa3f0; --card-glow: rgba(63,163,240,0.28);  --card-glow-lg: rgba(63,163,240,0.12); }
+.why-card[data-accent="teal"]   { --card-accent: #2dd4bf; --card-glow: rgba(45,212,191,0.28);  --card-glow-lg: rgba(45,212,191,0.12); }
+.why-card[data-accent="violet"] { --card-accent: #a78bfa; --card-glow: rgba(167,139,250,0.28); --card-glow-lg: rgba(167,139,250,0.12); }
+
 .why-card {
-  background: var(--white);
-  border: 1px solid rgba(30,45,61,0.08);
+  background: linear-gradient(145deg, #0d1e38 0%, #091526 100%);
+  border: 1px solid rgba(255,255,255,0.07);
   border-radius: var(--r-lg);
-  padding: 36px 28px;
+  padding: 0 0 36px;
   transition:
     transform 0.3s var(--ease-out),
     box-shadow 0.3s var(--ease-out),
@@ -727,19 +758,8 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   position: relative;
   overflow: hidden;
 }
-/* Amber glow border on hover — pseudo overlay */
-.why-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: var(--r-lg);
-  background: transparent;
-  border: 1.5px solid transparent;
-  background-clip: padding-box;
-  transition: opacity 0.3s;
-  opacity: 0;
-  pointer-events: none;
-}
+
+/* Top accent line — always visible, per card color */
 .why-card::after {
   content: '';
   position: absolute;
@@ -747,51 +767,73 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(to right, var(--amber), var(--amber-soft));
-  opacity: 0;
-  transition: opacity 0.3s;
+  background: linear-gradient(to right, var(--card-accent), transparent 80%);
   border-radius: 3px 3px 0 0;
+  opacity: 0.9;
+  transition: opacity 0.3s;
 }
-.why-card:hover::after { opacity: 1; }
+
+/* Subtle noise texture overlay */
+.why-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+  border-radius: var(--r-lg);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.why-card-body {
+  padding: 32px 28px 0;
+  position: relative;
+  z-index: 1;
+}
+
 .why-card:hover {
-  transform: translateY(-10px);
+  transform: translateY(-8px);
+  border-color: rgba(255,255,255,0.14);
   box-shadow:
-    0 0 0 1.5px rgba(232,146,58,0.25),
-    0 24px 64px rgba(232,146,58,0.12),
-    0 4px 20px rgba(30,45,61,0.06);
-  border-color: rgba(232,146,58,0.2);
+    0 0 0 1px var(--card-glow),
+    0 20px 60px var(--card-glow-lg),
+    0 4px 20px rgba(0,0,0,0.4);
 }
+.why-card:hover::after {
+  opacity: 1;
+}
+
 .why-icon {
-  width: 52px;
-  height: 52px;
+  width: 64px;
+  height: 64px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--amber-pale);
-  border: 1px solid rgba(232,146,58,0.25);
-  border-radius: var(--r-md);
-  color: var(--amber);
-  margin-bottom: 20px;
-  transition: background 0.25s, box-shadow 0.25s, color 0.2s, transform 0.3s var(--ease-spring);
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 50%;
+  color: var(--card-accent);
+  margin-bottom: 22px;
+  box-shadow: 0 0 20px var(--card-glow);
+  transition: box-shadow 0.3s, transform 0.3s var(--ease-spring), background 0.25s;
 }
 .why-card:hover .why-icon {
-  background: rgba(232,146,58,0.14);
-  box-shadow: 0 0 24px rgba(232,146,58,0.35), 0 0 8px rgba(232,146,58,0.2);
-  color: var(--amber);
-  transform: scale(1.1) rotate(-3deg);
+  box-shadow: 0 0 36px var(--card-glow), 0 0 12px var(--card-glow);
+  background: rgba(255,255,255,0.07);
+  transform: scale(1.08) rotate(-4deg);
 }
 .why-card h3 {
   font-family: var(--font-heading);
-  font-size: 1.2rem;
+  font-size: 1.15rem;
   font-weight: 700;
-  color: var(--navy);
+  color: var(--white);
   letter-spacing: -0.01em;
   margin-bottom: 10px;
 }
 .why-card p {
   font-size: 14px;
-  line-height: 1.7;
-  color: var(--text-muted-dark);
+  line-height: 1.75;
+  color: rgba(255,255,255,0.55);
 }
 
 /* ==========================================================
@@ -1793,12 +1835,13 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 
   /* ---- End mobile hero ---- */
 
-  /* WHY SECTION — center on mobile */
+  /* WHY SECTION — single column on mobile */
   .why-section { padding: 80px 0 64px; }
   .why-header { text-align: center; }
-  .why-grid { grid-template-columns: 1fr; max-width: 440px; margin: 0 auto; }
-  .why-card { text-align: center; }
-  .why-icon { margin-left: auto; margin-right: auto; }
+  .why-grid { grid-template-columns: 1fr; max-width: 100%; gap: 16px; }
+  .why-card { text-align: left; }
+  .why-icon { margin-left: 0; }
+  .why-card-body { padding: 28px 24px 0; }
 
   /* SERVICES — native scroll on mobile */
   .services-section { height: auto; }
@@ -2089,21 +2132,7 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   pointer-events: none;
 }
 
-/* Subtle grid lines on why-section cards for depth */
-.why-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(45,142,212,0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(45,142,212,0.025) 1px, transparent 1px);
-  background-size: 32px 32px;
-  border-radius: var(--r-lg);
-  opacity: 0;
-  transition: opacity 0.3s;
-  pointer-events: none;
-}
-.why-card:hover::before { opacity: 1; }
+/* Why card noise texture already defined in card block above */
 
 /* Eye-catching: hero eyebrow animated border glow */
 .hero-eyebrow {
