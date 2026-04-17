@@ -2148,3 +2148,8 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   transition: opacity 0.3s;
 }
 .quote-card:hover::before { opacity: 1; }
+
+/* Scroll margin for anchor links — prevents sticky nav from covering section headers */
+section[id] {
+  scroll-margin-top: calc(var(--nav-h) + 16px);
+}
