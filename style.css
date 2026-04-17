@@ -1588,6 +1588,7 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 }
 
 @media (max-width: 768px) {
+  .services-section { overflow-x: hidden; }
   .nav-toggle { display: flex; }
   .nav-links {
     display: none;
