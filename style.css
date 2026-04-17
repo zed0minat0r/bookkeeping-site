@@ -842,36 +842,12 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 .services-section {
   position: relative;
   height: 280vh;
-  background: var(--navy);
+  background: var(--off-white);
   /* NO overflow:hidden — that breaks position:sticky on children */
 }
 
-/* Futuristic grid overlay */
-.services-section::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(45,142,212,0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(45,142,212,0.06) 1px, transparent 1px);
-  background-size: 64px 64px;
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* Ambient glow orb */
-.services-section::after {
-  content: '';
-  position: absolute;
-  width: 900px;
-  height: 900px;
-  border-radius: 50%;
-  top: -150px;
-  right: -150px;
-  background: radial-gradient(circle, rgba(45,142,212,0.1) 0%, transparent 65%);
-  pointer-events: none;
-  z-index: 0;
-}
+/* Grid overlay and orb hidden on light background */
+.services-section::before, .services-section::after { display: none; }
 
 .services-sticky-outer {
   /* passthrough — height inherited from parent .services-section */
@@ -899,9 +875,9 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   max-width: 700px;
   flex-shrink: 0;
 }
-.services-header .section-label { color: var(--sky-bright); }
+.services-header .section-label { color: var(--amber); }
 .services-header .section-heading {
-  color: var(--white);
+  color: var(--navy);
   font-size: clamp(2.8rem, 5.5vw, 4.4rem);
   line-height: 1.0;
   letter-spacing: -0.03em;
@@ -913,7 +889,7 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 .services-sub {
   font-size: 16px;
   line-height: 1.65;
-  color: var(--text-muted-light);
+  color: var(--text-dark);
   margin-top: 18px;
   max-width: 480px;
 }
