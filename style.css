@@ -877,7 +877,8 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 }
 
 .services-track-wrap {
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: visible;
   flex: 1;
   display: flex;
   align-items: center;
@@ -1661,14 +1662,14 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
     overflow: hidden;
   }
 
-  /* Professional workspace photo as hero background on mobile */
+  /* Ryan Hoover photo as hero background on mobile */
   .hero::before {
     content: '';
     position: absolute;
     inset: 0;
-    background-image: url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1200&q=80');
+    background-image: url('https://perchbookkeeping.com/wp-content/uploads/elementor/thumbs/687e990a3c35c94dccee5387_IMG_7664.jpeg-r9g9fyeftkw0knscz8rukedwkt6rhzjzmzqn5bn820.webp');
     background-size: cover;
-    background-position: center;
+    background-position: center top;
     z-index: 0;
   }
 
@@ -2151,4 +2152,40 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 /* Scroll margin for anchor links — prevents sticky nav from covering section headers */
 section[id] {
   scroll-margin-top: calc(var(--nav-h) + 16px);
+}
+
+/* ==========================================================
+   GOOGLE REVIEWS LINK
+   ========================================================== */
+.google-reviews-link-wrap {
+  text-align: center;
+  margin-top: 40px;
+}
+.google-reviews-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.75);
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.12);
+  padding: 14px 24px;
+  min-height: 48px;
+  border-radius: 50px;
+  letter-spacing: 0.02em;
+  transition: background 0.2s, border-color 0.2s, color 0.2s, box-shadow 0.2s;
+}
+.google-reviews-link:hover,
+.google-reviews-link:focus-visible {
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(255,255,255,0.25);
+  color: var(--white);
+  box-shadow: 0 4px 24px rgba(66,133,244,0.2);
+  outline: none;
+}
+
+@media (max-width: 768px) {
+  .google-reviews-link-wrap { margin-top: 28px; }
+  .google-reviews-link { font-size: 13px; padding: 13px 20px; }
 }
