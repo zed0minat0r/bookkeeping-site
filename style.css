@@ -2013,14 +2013,8 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
    FUTURISTIC ENHANCEMENTS — GLOW + SCANLINE
    ========================================================== */
 
-/* Hero scanline: a single slow-sweeping horizontal light beam */
-.hero-scanline {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  overflow: hidden;
-}
+/* Hero scanline removed */
+.hero-scanline { display: none; }
 .hero-scanline::before {
   content: '';
   position: absolute;
