@@ -1,101 +1,114 @@
 # Perch Bookkeeping — Nigel's Audit
 **Date:** 2026-04-09
-**Previous Score:** 7.2
+**Previous Score:** 7.0
 **Audited at:** 375px mobile viewport (primary), 1280px desktop (secondary)
 
 ---
 
-## Overall Score: 7.0 / 10
+## Overall Score: 7.5 / 10
 
-Delta from prior: **-0.2**
+Delta from prior: **+0.5**
 
-The services bleed fix is confirmed and was genuinely the right structural change. However on a strict re-read of every section against a real-user lens, the site has stalled. The prior 7.2 was partly generous. No new improvements have landed since the last pass. The form still does not send. The workspace photo on mobile is still a stock image. The testimonial is still a single, unsupported quote. Nothing moves the needle on the three previously-stated priorities. The score reflects honest current state — above average, not a site someone would confidently choose over a professionally-designed competitor.
+The changes since the last audit are genuine and material. Four previously-flagged issues are now resolved or substantially improved: the contact form is wired to Formspree and submits real data; the hero stat has been corrected from the awkward "10yr Military Service" to "98% Client Retention" — a meaningful conversion signal; the testimonial section has been expanded to two attributed cards with a social proof bar (ProAdvisor badge, 5-star rating, 150+ clients); and the colour inconsistency in the third service card number badge has been brought into the sky-blue system. These are not cosmetic adjustments — they directly address the three highest-priority items from the prior cycle. The score reflects honest improvement.
+
+What keeps this below 8.0: the mobile hero is still a generic Unsplash workspace photo rather than Ryan himself; the Why Perch grid is still 950px of scroll depth on mobile with no skip; and the design archetype is still identifiably AI-generated single-page-app. Real differentiation from a competitor would require at least one of those three to close.
 
 ---
 
 ## Section Scores
 
-### 1. First Impression / Hero — 7.0 / 10
+### 1. First Impression / Hero — 7.5 / 10
 
-Desktop: Two-column split with Ryan's photo and headline. The split is clean, the amber CTA glows appropriately, the hero stats counter animation is a pleasant trust-building touch. The gradient overlay on the photo (`linear-gradient(to right, var(--navy) 0%, transparent 35%)`) fades out properly.
+Desktop: The two-column split reads well. The scanline animation sweeping across the hero is a considered detail — 9-second cycle, subtle enough to not register consciously on most users but it adds life to what would otherwise be a static photo panel. The three orbs parallax correctly with scroll. The eyebrow glow pulse at 4s is appropriate.
 
-Mobile: Stock Unsplash workspace photo. This was flagged in the prior audit as a concern and has not been addressed. A cold visitor on mobile sees a generic desk photo that communicates nothing specific about Ryan Hoover or Perch.
+The "98% Client Retention" stat is a strong correction. It is a specific, believable number with direct conversion weight. "150+ Clients Served" and "100% Virtual & Secure" alongside it form a coherent trio.
 
-Eyebrow pill at 12px with "Veteran-Owned · Pennsylvania-Based · 100% Virtual" — 47 characters on 375px viewport. The pill wraps to two lines on very small phones but at 375px just barely fits. Still strained.
+Mobile: The Unsplash generic workspace photo remains. This was flagged in audits one, two, and three. At 375px a user sees a desk that could belong to any of ten thousand SaaS landing pages. Ryan's photo exists — it is used on desktop and in About. Using it as the mobile hero background (blurred, darkened with the existing gradient overlay) would take one line of CSS and eliminate the most significant trust gap on mobile. The current implementation is not harmful but it is a missed opportunity with an unusually low fix cost.
 
-Hero sub-copy ("Ryan Hoover brings military discipline and genuine care to every set of books") is personal and good. The stats row (150+, 10yr, 100%) — "10yr Military Service" remains an awkward trust signal. It belongs in the About section, not as a primary hero metric alongside client count and virtual availability.
+The hero eyebrow text is now "Veteran-Owned · 100% Virtual" — this is tighter and better than the prior three-part string. No longer straining on 375px.
 
 ### 2. Navigation (Mobile) — 7.5 / 10
 
-Full-screen overlay, aria-expanded toggle, X animation, outside-click close — all correctly implemented and unchanged from prior audit.
+Unchanged and correctly implemented. The full-screen overlay, aria-expanded toggle, X animation, and outside-click close all work as expected. The nav CTA pulse animation at 3s is now present — it is at the right intensity. The `.nav-cta` animation was not in prior audits and is a welcome addition.
 
-The previously-flagged logo filter issue is technically still present: `filter: brightness(0) invert(1)` is always applied regardless of scroll state. The header has a dark-to-transparent gradient by default which mitigates this, but on tablets at the breakpoint between the hero's dark top and the off-white why-section, there is a moment where the white logo floats over a near-white background. Low probability of being noticed by the average user, but it is a real edge case.
+The logo filter issue (`brightness(0) invert(1)` always applied) persists. On a white or near-white section with a transparent nav background, the white logo could float on white. The dark gradient on the nav default mitigates this in practice, but it is still a brittle implementation that would break on any light-coloured hero redesign.
 
 ### 3. Why Perch — 7.0 / 10
 
-Four feature cards in a `repeat(4, 1fr)` grid on desktop, single column on mobile. The amber icon treatment is consistent and warm. The `why-card:hover::after` top-bar accent at 3px is a subtle detail that rewards attention on non-Retina displays — too subtle on Retina.
+Cards carry the same quality copy as prior audits. The hover data-grid overlay (`.why-card::before`) is subtle enough to work — it reveals at `opacity: 1` on hover but at `rgba(45,142,212,0.025)` line weight it is virtually invisible to all users. It registers as polish to developers; it registers as nothing to users. Harmless.
 
-Mobile concern unchanged from prior audit: four full-height cards stacked vertically means approximately 950px of scroll before the visitor reaches Services. No skip affordance. A real user landing from a Google Ad is unlikely to read all four before bouncing.
+The fundamental mobile problem is unchanged: four full-width cards stacked vertically on a single column means a visitor must scroll approximately 950px to exit the Why section. No section jump, no collapsed accordion, no "Read more" pattern. A small-business owner who found this via a Google Ad for bookkeeping in Pennsylvania is unlikely to scroll through four cards before either converting or bouncing. This is the single highest structural risk on the page after the form fix.
 
-Copy quality is the strongest in this section — all four cards have genuine, specific copy that does not feel templated.
+The amber icon treatment, the `translateY(-10px)` hover lift, and the border + shadow interaction on hover are all well-calibrated.
 
-### 4. Services — 7.5 / 10
+### 4. Services — 8.0 / 10
 
-The horizontal scroll on desktop and the snap-scroll mobile fallback are both well-implemented. The services bleed that was previously flagged is confirmed resolved. Card width of 310px on a 375px viewport leaves 45px visible from card 2, which is adequate as a scroll affordance.
+The largest single-section improvement this cycle. The third card service number badge is now confirmed in the sky-blue system (`.service-card:nth-child(3) .service-num` uses `var(--sky-bright)` and `rgba(45,142,212,0.14)` background), consistent with card one. Card two uses amber. Card three uses sky. This is a deliberate and now-coherent three-tier numbering palette.
 
-However: no scroll affordance text or arrow exists on mobile. A first-time visitor with no prior context has no visual signal that there are two more cards to the right. The progress bar is correctly hidden on mobile (`services-bottom-row { display: none; }`). A simple inline "swipe for more →" below the heading on mobile would resolve this in six characters.
+The swipe hint is present and visible on mobile (`services-swipe-hint` with `hint-pulse` animation at 45% opacity). This resolves the prior audit's highest-priority UX gap for the services section.
 
-The third service card's number badge uses `#4de8b0` (green) which is a third accent colour not present anywhere else in the design system. Blue, amber, and then teal creates a colour inconsistency. If the intent is to use three distinct colours for three service tiers, that should be a deliberate palette decision — but teal is not in the `:root` custom properties and appears only in this one badge.
+The scroll progress bar (amber-to-sky gradient with box-shadow glow) on desktop is the strongest single detail in the entire site. It is functional, it communicates state, and the glow at `0 0 18px rgba(232,146,58,0.85)` is visible without being garish.
 
-Desktop service card hover lift (`translateY(-8px)` with `box-shadow: 0 20px 80px rgba(45,142,212,0.28)`) is the right intensity. Not over-stated.
+Service card width at 290px on 375px viewport leaves approximately 65px visible from the second card. This is a correct affordance. The `scroll-snap-align: start` ensures a clean snap behaviour.
+
+The only remaining issue: the horizontal sticky scroll on desktop relies on `280vh` section height. On ultrawide viewports (>1400px) the cards may fully traverse within less scroll distance than expected. This is an edge case for a small bookkeeping business with primarily mobile and standard laptop users, but it is worth noting.
 
 ### 5. About Ryan — 7.5 / 10
 
-Same as prior audit. The photo frame at `aspect-ratio: 3/4` with no mobile override still produces a 500px tall image block on a 375px viewport before text content arrives. Ryan's photo is large and clear. The amber "Veteran-Owned" badge (`bottom: -12px; right: -12px`) sits properly within bounds on mobile.
+The copy quality in this section remains the best on the site. "Business owners shouldn't have to spend their nights and weekends sorting through receipts" is specific and relatable.
 
-About copy is the most personal and differentiated text on the site. "Business owners shouldn't have to spend their nights and weekends sorting through receipts" is specific, relatable, and not AI-template-bland.
+The mobile photo frame cap (`max-height: 360px`) is correctly applied and prevents the prior overflow issue on 375px. The `aspect-ratio: 3/4` with `object-fit: cover` and `object-position: center top` correctly prioritises Ryan's face.
+
+The amber "Veteran-Owned" badge sits at `right: 4px; bottom: -12px` on mobile — tight but not clipped. Desktop badge at `right: -18px; bottom: -18px` works against the rounded photo frame.
+
+No new issues. No regressions.
 
 ### 6. Process — 7.5 / 10
 
-Unchanged. The cleanest section. Three steps, numbered, alt-colored step 2 in amber. Gradient connector line on desktop correctly hidden on mobile. The "Get Onboarded & Relax" language is light and human without being unprofessional. No material issues.
+Unchanged and clean. Three steps, alternating sky/amber/sky, the gradient connector hidden on mobile, "Get Onboarded & Relax" copy light without being unprofessional.
 
-### 7. Quote Section — 7.0 / 10
+The step-pulse and step-pulse-amber animations at 3.4s cycle are on the cusp of "too many animations simultaneously" when viewed alongside the orb floats, the scanline, the dot pulse, the eyebrow glow, the CTA glow, and the nav CTA pulse. On desktop all of these run concurrently. Each is individually justified; the aggregate animation load is high. Users with motion sensitivity below the `prefers-reduced-motion` threshold may find the page busy. This is not scored against the site in this audit per instructions, but it is noted.
 
-Attribution specificity ("Maria T., owner of a landscaping company in Lancaster, PA") was improved in the prior cycle and remains good. A single quote is better than a decoration section. The dual radial glow behind the blockquote is invisible at the opacity levels used — harmless.
+### 7. Testimonials / Quote Section — 7.5 / 10
 
-The large decorative quote-mark (`120px` / `80px mobile`) still reads as template convention. At `opacity: 0.35` on mobile it is approximately the same visual weight as the quote attribution line below. That is a proportion problem — the decoration is competing with the content for attention.
+The upgrade from one quote to a two-card grid is the second-most impactful change this cycle. The social proof bar (ProAdvisor badge, five-star icons, 150+ clients) above the testimonials provides the volume signal that was missing.
 
-No second testimonial, no volume signal, no review count. One quote is better than zero but it still does not close the trust loop opened by "150+ Clients Served" in the hero.
+Maria T. and James K. are both attributed with industry and city — landscaping, Lancaster PA; HVAC, York PA. Both are local Pennsylvania businesses, which is authentic for a Pennsylvania-based bookkeeper. Both quotes are specific rather than generic ("two years of messy books in a matter of weeks" is a real claim).
 
-### 8. Contact Form — 6.0 / 10
+The `quote-mark-sm` at 56px / `opacity: 0.28` amber is well-proportioned against the card size. This was improved from the prior 120px oversized decoration.
 
-Score reduced from prior 6.5. The form has been through three audit cycles with the dummy submit flagged each time. At this point it is not a polish gap — it is a critical functional failure that has been knowingly left in place. The setTimeout mock (1200ms "Sending..." → success state) is harmful: it creates false confidence in a visitor who has provided their personal information and believes they have made contact. Ryan receives no notification. The lead is gone.
+The quote card hover (amber border + box-shadow) is a nice reinforcement that these are interactive elements, though the cards are not actually interactive beyond hover.
 
-The form-note at `rgba(255,255,255,0.5)` passes minimum AA contrast but is still close to the threshold on dark backgrounds. Field labels at `rgba(255,255,255,0.5) / 12px / uppercase` remain borderline in bright ambient light.
+Minor remaining issue: the social proof bar wraps to a vertical stack on mobile (`flex-direction: column`). At 375px the ProAdvisor badge reads fine but "QuickBooks ProAdvisor Certified" at 13px is 26 characters — it may wrap on very small phones. The `white-space: nowrap` on `.proof-badge` means the entire badge line is one non-wrapping unit, which is correct.
 
-Form UX is otherwise appropriate: amber focus ring, red error highlight, textarea resize vertical, logical field order.
+### 8. Contact Form — 7.5 / 10
+
+The prior 6.0 was the most urgent score on the site and the change is the most consequential fix across four audit cycles. The form now posts to `https://formspree.io/f/xkgjrkge` via fetch with `Accept: application/json`. The success state (`#16a34a` green button with "Request Sent! ✓") and the error handling (red button with "Error — Try Again") are both correctly implemented. Ryan will now receive submissions.
+
+The client-side validation correctly highlights empty required fields in `#ef4444` red and focuses the first error. The `novalidate` attribute disables browser-native validation popups in favour of the custom inline treatment — consistent and intentional.
+
+Field labels at `rgba(255,255,255,0.5) / 12px / uppercase` are borderline on contrast against the dark form background. They pass WCAG AA for large text by scale equivalence, but 12px uppercase with 50% opacity white is at the limit in ambient light conditions. Raising to `rgba(255,255,255,0.65)` would provide meaningful improvement without changing the visual character.
+
+The `form-note` ("We'll be in touch within one business day.") at `rgba(255,255,255,0.5) / 12px` is the same concern — marginal but within passing range.
 
 ### 9. Visual Identity / Design Consistency — 7.0 / 10
 
-The amber+navy+sky palette is internally consistent. The Syne/Inter type pairing is established and well-applied. The grain textures on light sections add tactile depth without being visible to untrained eyes — good professional detail.
+Amber+navy+sky palette is internally consistent. The Syne/Inter pairing is established. The scroll journey bar at the top (3px, amber-to-sky gradient) is a small but considered addition.
 
-What has not changed: the structural fingerprint. Hero with stats, four-card feature grid, horizontal-scroll services, photo+text split about, three-step numbered process, single quote, two-column contact. This is the canonical AI-generated single-page layout. Nothing specific to Ryan Hoover, bookkeeping, or Pennsylvania exists outside the copy and the actual photos.
+The teal colour issue (`#4de8b0`) has been resolved — confirmed. All three service number badges now use palette colours.
 
-The third service card's `#4de8b0` teal number badge is the only colour that falls outside the established palette and it is used for a structural element (service numbering) not a decorative one. It should either be codified in `:root` or brought into the amber/sky system.
+The structural fingerprint remains: hero stats, four-card grid, horizontal-scroll services, photo+text about, three-step process, testimonials, two-column contact. This is the standard AI-generated single-page template. Nothing about the visual identity is uniquely Perch's — a competitor could deploy the same layout with different copy. At 7.0 this is above average but it is not distinctive. For a local service business competing on trust and personality, a more specific visual identity would have compounding benefits on conversion.
 
-Six section dividers (`div.section-divider`) between every content pair remain. At 3px each they are thin enough not to dominate visually, but this was flagged in the prior audit as redundant with the alternating dark/light/dark background colour changes. Still not addressed.
+Three section dividers remain (marquee→why, services→about, quote→contact). The alternating dark/light/dark backgrounds accomplish the same visual separation. The dividers are redundant but at 3px and 0.4 opacity they are not actively harmful.
 
-### 10. Trust and Conversion — 7.0 / 10
+### 10. Trust and Conversion — 7.5 / 10
 
-Real phone number (717-208-2243), real email (ryan@perchbookkeeping.com), real business hours — these remain the strongest trust signals on the site and they are specific.
+The form is now functional. The testimonial section now provides two data points with industry specificity. The social proof bar adds a third credential layer (ProAdvisor certification). The "98% Client Retention" hero stat is a strong, specific, credible number.
 
-What is still absent:
-- Form backend (flagged three times)
-- Second testimonial or social proof volume
-- No professional certification badge (QuickBooks ProAdvisor, for instance)
-- No Google Reviews integration or link
-
-The amber pulse animation on the CTA buttons (`.btn-glow`) is appropriate in frequency (2.8s cycle) and amplitude (subtle box-shadow pulse). It draws attention to the primary action without being distracting.
+What remains:
+- No Google Reviews link or count. A "See our Google Reviews" link would take 60 seconds to add and would provide third-party verification that the site currently cannot offer.
+- No pricing signals. Small business owners deciding between bookkeepers often eliminate candidates based on visible pricing. "Custom proposals" is correct positioning but adding a "Starting from $X/month" anchor would reduce friction on the consultation decision.
+- The email CTA in About ("Email Ryan") opens `mailto:ryan@perchbookkeeping.com` — this is correct and personal.
 
 ---
 
@@ -103,25 +116,25 @@ The amber pulse animation on the CTA buttons (`.btn-glow`) is appropriate in fre
 
 | Section | Prior | Current | Delta |
 |---|---|---|---|
-| Hero | 7.0 | 7.0 | 0 |
+| Hero | 7.0 | 7.5 | +0.5 |
 | Navigation | 7.5 | 7.5 | 0 |
 | Why Perch | 7.0 | 7.0 | 0 |
-| Services | 7.0 | 7.5 | +0.5 |
+| Services | 7.5 | 8.0 | +0.5 |
 | About Ryan | 7.5 | 7.5 | 0 |
 | Process | 7.5 | 7.5 | 0 |
-| Quote | 7.0 | 7.0 | 0 |
-| Contact Form | 6.5 | 6.0 | -0.5 |
+| Testimonials | 7.0 | 7.5 | +0.5 |
+| Contact Form | 6.0 | 7.5 | +1.5 |
 | Visual Identity | 7.0 | 7.0 | 0 |
-| Trust/Conversion | 7.0 | 7.0 | 0 |
+| Trust/Conversion | 7.0 | 7.5 | +0.5 |
 
-**Services bleed fix confirmed (+0.5). Form score reduced (-0.5) because it has now been flagged across three consecutive audits without action. Net: -0.2 from prior cycle.**
+**Net gain: +0.5 overall. Contact form fix accounts for +1.5 on that section alone — the single most impactful change across four audit cycles. Dual testimonials and social proof bar provide a genuine +0.5. Service palette consistency and swipe hint combine for +0.5 on Services. Hero stat correction lifts hero +0.5.**
 
 ---
 
 ## Top 3 Priorities
 
-1. **Wire up the contact form — this is now urgent.** Three audit cycles have flagged this as the single highest commercial risk. Use Formspree (free tier, five minutes of setup) or Netlify Forms. Every submission the current dummy form accepts is a lead Ryan will never see. The site is net-negative for his business until this is fixed.
+1. **Replace the mobile hero background photo with Ryan's actual photo.** The Unsplash generic desk image has been flagged across four consecutive audits. Ryan's photo is already loaded on the desktop hero and in the About section — the asset exists. Change one CSS line (`background-image` in the `.hero::before` mobile media query) to the Perch photo URL already in use. A real face builds trust. A stock desk does not.
 
-2. **Add a second testimonial and a social proof anchor.** "150+ Clients Served" is stated but not evidenced. A Google Reviews count, a second quote from a different industry, or a ProAdvisor badge gives that stat credibility. One quote from "Maria T." is a thin foundation for a service that asks strangers to hand over their financial records.
+2. **Address the Why Perch mobile scroll depth.** Four full-height cards stacked on mobile = 950px of scroll before the visitor reaches Services. Add a "More reasons →" collapsed section or convert the four cards to a two-card visible + two-card reveal pattern on mobile. Alternatively, reduce Why Perch to three cards on mobile only (drop one) — the copy quality would allow this without information loss.
 
-3. **Add an explicit horizontal-scroll signal on mobile Services.** Six words and one arrow would remove the ambiguity entirely. Add a small "Swipe to explore" cue with a right-arrow glyph below the services header on mobile only. The snap-scroll mechanism works — the affordance just needs to be surfaced.
+3. **Add a Google Reviews anchor.** The site now has two testimonials and a social proof bar. The missing link is third-party verification. Even a single line — "Read our Google Reviews →" with an external link icon — closes the credibility loop. This is approximately 10 minutes of work and zero design change required.
