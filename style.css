@@ -2218,3 +2218,50 @@ section[id] {
   .google-reviews-link-wrap { margin-top: 28px; }
   .google-reviews-link { font-size: 13px; padding: 13px 20px; }
 }
+
+/* ---- Why Card Animations ---- */
+/* Icon glow pulse — each accent color pulses its own ring */
+@keyframes iconPulse {
+  0%, 100% { box-shadow: 0 0 12px var(--card-glow), inset 0 0 8px var(--card-glow); }
+  50% { box-shadow: 0 0 24px var(--card-glow-lg), 0 0 48px var(--card-glow), inset 0 0 12px var(--card-glow); }
+}
+.why-card .why-icon {
+  animation: iconPulse 3s ease-in-out infinite;
+}
+.why-card:nth-child(2) .why-icon { animation-delay: 0.75s; }
+.why-card:nth-child(3) .why-icon { animation-delay: 1.5s; }
+.why-card:nth-child(4) .why-icon { animation-delay: 2.25s; }
+
+/* Card top accent line shimmer */
+@keyframes accentShimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.why-card::after {
+  background: linear-gradient(90deg, transparent, var(--card-accent), transparent) !important;
+  background-size: 200% 100% !important;
+  animation: accentShimmer 4s linear infinite;
+}
+.why-card:nth-child(2)::after { animation-delay: 1s; }
+.why-card:nth-child(3)::after { animation-delay: 2s; }
+.why-card:nth-child(4)::after { animation-delay: 3s; }
+
+/* Staggered entrance */
+.why-card {
+  opacity: 0;
+  transform: translateY(40px) scale(0.95);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.why-card.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+.why-card:nth-child(2) { transition-delay: 0.15s; }
+.why-card:nth-child(3) { transition-delay: 0.3s; }
+.why-card:nth-child(4) { transition-delay: 0.45s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .why-card .why-icon { animation: none; }
+  .why-card::after { animation: none !important; }
+  .why-card { opacity: 1; transform: none; transition: none; }
+}
