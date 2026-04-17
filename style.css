@@ -842,7 +842,7 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
   position: sticky;
   top: 0;
   height: 100vh;
-  overflow: hidden;
+  overflow: visible;
   padding: 0 0 0 80px;
   display: flex;
   flex-direction: column;
