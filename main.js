@@ -238,7 +238,7 @@
   }
 
   /* -------------------------------------------------------
-     FORM SUBMIT
+     FORM SUBMIT — Formspree + client-side validation UX
   ------------------------------------------------------- */
   var form = document.querySelector('.contact-form');
   if (form) {
@@ -267,20 +267,51 @@
       btn.style.opacity = '0.75';
       btn.style.animation = 'none';
 
-      setTimeout(function () {
-        btn.innerHTML = 'Request Sent! <span class="btn-arrow">&#10003;</span>';
-        btn.style.background = '#16a34a';
-        btn.style.boxShadow = '0 4px 32px rgba(22,163,74,0.5)';
-        btn.style.opacity = '1';
-        setTimeout(function () {
+      var data = new FormData(form);
+      fetch(form.action, {
+        method: 'POST',
+        body: data,
+        headers: { 'Accept': 'application/json' }
+      }).then(function (response) {
+        if (response.ok) {
+          btn.innerHTML = 'Request Sent! <span class="btn-arrow">&#10003;</span>';
+          btn.style.background = '#16a34a';
+          btn.style.boxShadow = '0 4px 32px rgba(22,163,74,0.6), 0 0 60px rgba(22,163,74,0.2)';
+          btn.style.opacity = '1';
           form.reset();
-          btn.innerHTML = originalHTML;
+          setTimeout(function () {
+            btn.innerHTML = originalHTML;
+            btn.disabled = false;
+            btn.style.background = '';
+            btn.style.boxShadow = '';
+            btn.style.animation = '';
+          }, 4000);
+        } else {
+          btn.innerHTML = 'Error — Try Again';
+          btn.style.background = '#ef4444';
+          btn.style.boxShadow = '0 4px 20px rgba(239,68,68,0.5)';
+          btn.style.opacity = '1';
           btn.disabled = false;
+          setTimeout(function () {
+            btn.innerHTML = originalHTML;
+            btn.style.background = '';
+            btn.style.boxShadow = '';
+            btn.style.animation = '';
+          }, 3000);
+        }
+      }).catch(function () {
+        btn.innerHTML = 'Error — Try Again';
+        btn.style.background = '#ef4444';
+        btn.style.boxShadow = '0 4px 20px rgba(239,68,68,0.5)';
+        btn.style.opacity = '1';
+        btn.disabled = false;
+        setTimeout(function () {
+          btn.innerHTML = originalHTML;
           btn.style.background = '';
           btn.style.boxShadow = '';
           btn.style.animation = '';
         }, 3000);
-      }, 1200);
+      });
     });
   }
 

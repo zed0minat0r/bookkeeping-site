@@ -39,6 +39,7 @@
     <!-- HERO -->
     <section class="hero" id="hero" aria-label="Hero">
       <div class="hero-noise" aria-hidden="true"></div>
+      <div class="hero-scanline" aria-hidden="true"></div>
       <div class="hero-glow-orb orb-1" aria-hidden="true"></div>
       <div class="hero-glow-orb orb-2" aria-hidden="true"></div>
       <div class="hero-glow-orb orb-3" aria-hidden="true"></div>
@@ -46,7 +47,7 @@
       <div class="hero-inner">
         <div class="hero-eyebrow reveal-fade">
           <span class="eyebrow-dot" aria-hidden="true"></span>
-          Veteran-Owned · Pennsylvania-Based · 100% Virtual
+          Veteran-Owned · 100% Virtual
         </div>
 
         <h1 class="hero-headline reveal-fade" style="--d:0.1s">
@@ -165,8 +166,6 @@
       </div>
     </section>
 
-    <!-- DIVIDER: why → services -->
-    <div class="section-divider" aria-hidden="true"></div>
 
     <!-- SERVICES — STICKY HORIZONTAL SCROLL -->
     <section class="services-section" id="services" aria-labelledby="services-heading">
@@ -249,6 +248,11 @@
             </div>
           </div>
 
+          <div class="services-swipe-hint" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M2 8H14M14 8L10 4M14 8L10 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Swipe to explore
+          </div>
+
         </div>
       </div>
     </section>
@@ -291,8 +295,6 @@
       </div>
     </section>
 
-    <!-- DIVIDER: about → process -->
-    <div class="section-divider" aria-hidden="true"></div>
 
     <!-- PROCESS -->
     <section class="process-section" id="process" aria-labelledby="process-heading">
@@ -330,8 +332,6 @@
       </div>
     </section>
 
-    <!-- DIVIDER: process → quote -->
-    <div class="section-divider" aria-hidden="true"></div>
 
     <!-- QUOTE SECTION -->
     <section class="quote-section" aria-label="Client quote">
@@ -379,7 +379,7 @@
           </ul>
         </div>
         <div class="contact-right reveal-up" style="--d:0.15s">
-          <form class="contact-form" aria-label="Free consultation request form" novalidate>
+          <form class="contact-form" aria-label="Free consultation request form" action="https://formspree.io/f/xkgjrkge" method="POST" novalidate>
             <h3 class="form-title">Schedule Your Free Consult</h3>
             <div class="form-row">
               <div class="field">
